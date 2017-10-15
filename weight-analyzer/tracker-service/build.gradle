@@ -1,0 +1,13 @@
+apply plugin : 'java' 
+apply plugin : 'application'
+apply plugin: 'org.springframework.boot'
+jar {
+    baseName = 'weight-analyzer-tracker-service'
+    version = '0.0.1-SNAPSHOT'
+}
+dependencies {
+    compile project(':db-mediator')
+    compile project(':alert-rules')  	
+    compile('org.springframework.boot:spring-boot-starter-web')
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+ }

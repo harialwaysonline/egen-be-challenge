@@ -1,0 +1,11 @@
+apply plugin : 'java' 
+apply plugin : 'application'
+jar {
+    baseName = 'weight-analyzer-alert-rules'
+    version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+dependencies {
+    compile project(':db-mediator') 
+	compile group: 'org.jeasy', name: 'easy-rules-core', version: '3.0.0'
+}
