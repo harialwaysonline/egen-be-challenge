@@ -23,6 +23,9 @@ public class AbstractWeightRule {
         this.baseWeight = baseWeight;
     }
 
+    public AbstractWeightRule() {
+    }
+
     public void saveAlert(String alertType, String alertDesc) {
         //save to Metric DB
         AlertDO alertDO = new AlertDO();
@@ -33,5 +36,19 @@ public class AbstractWeightRule {
         alertRepository.createAlert(alertDO);
     }
 
+    public MetricDO getMetricDO() {
+        return metricDO;
+    }
 
+    public void setMetricDO(MetricDO metricDO) {
+        this.metricDO = metricDO;
+    }
+
+    public int getBaseWeight() {
+        return baseWeight;
+    }
+
+    public void setBaseWeight(int baseWeight) {
+        this.baseWeight = baseWeight;
+    }
 }
