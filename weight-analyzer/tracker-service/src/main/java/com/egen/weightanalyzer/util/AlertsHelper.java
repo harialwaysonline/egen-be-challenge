@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,13 +25,10 @@ public class AlertsHelper {
     @Qualifier("alertRepository")
     IAlertRepository alertRepository;
 
-    @Autowired
-    AlertDO alertDO;
     public Alert createAlert(Alert alert){
-        alertDO.setAlertType(alert.getAlertType());
-        alertDO.setAlertDesc(alert.getAlertDesc());
+        AlertDO alertDO= new AlertDO();
+        BeanUtils.copyProperties(alert,alertDO);
         alertDO= alertRepository.createAlert(alertDO);
-        BeanUtils.copyProperties(alertDO,alert);
         return alert ;
     }
 
@@ -46,8 +44,8 @@ public class AlertsHelper {
     }
 
 
-    public List<Alert> readAlertsByTimeRange(){
-        List<AlertDO> alertsDO = alertRepository.findAll();
+    public List<Alert> readAlertsByTimeRange(Timestamp timestamp1,Timestamp timestamp2){
+        List<AlertDO> alertsDO = alertRepository.findAllByTimerage(timestamp1,timestamp2);
         List<Alert> alerts = new ArrayList<>();
         for(AlertDO alertDO:alertsDO){
             Alert alert=new Alert();

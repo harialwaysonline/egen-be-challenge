@@ -1,53 +1,48 @@
 package com.egen.weightanalyzer.resources;
 
+
+import com.egen.weightanalyzer.exceptions.MetricsNotFoundException;
 import com.egen.weightanalyzer.model.Metric;
 import com.egen.weightanalyzer.util.MetricsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/metrics")
-
 public class Metrics {
 
     @Autowired
     MetricsHelper metricsHelper;
+
     @PostMapping("/add")
-
-    public Metric createMetric(@Valid @RequestBody Metric metric){
-
-    Metric metric1 = metricsHelper.createMetric(metric);
-
-    return metric1;
-    }
-    @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Metric readMetrics(@Valid @PathParam("id") String id){
-       // Metric metric1 = metricsHelper.createMetric(metric);
-        Metric met = new Metric();
-        met.setName("hari");
-        met.setValue("152");
-        met.setTimeStamp(Timestamp.from(Instant.now()));
-        return met;
+    @ResponseStatus(HttpStatus.CREATED)
+    public Metric createMetric(@RequestBody @Valid Metric metric) {
+        return metricsHelper.createMetric(metric);
     }
 
     @GetMapping("/")
-    public List<Metric> readAllMetrics(){
+    @ResponseBody
+    public  List<Metric> readAllMetrics() throws MetricsNotFoundException {
+        if (CollectionUtils.isEmpty(metricsHelper.readAllMetric())) {
+            throw new MetricsNotFoundException("Metrics Not found");
+        }
         return metricsHelper.readAllMetric();
     }
 
-    @GetMapping("/{id}/{time1}-{time2}")
-    public Metric readMetricsByTimeRange (@PathParam("time1")Timestamp timestamp1,
-                                          @PathParam("time2") Timestamp timestamp2){
-        return null;
+    @GetMapping("/time_line")
+    public List<Metric> readMetricsByTimeRange(
+            @RequestParam String start,
+            @RequestParam String end) {
+        Timestamp startT = Timestamp.from(Instant.ofEpochMilli(Long.parseLong(start)));
+        Timestamp endT = Timestamp.from(Instant.ofEpochMilli(Long.parseLong(end)));
+        return metricsHelper.readMetricByTimeRange(startT, endT);
     }
 
 }

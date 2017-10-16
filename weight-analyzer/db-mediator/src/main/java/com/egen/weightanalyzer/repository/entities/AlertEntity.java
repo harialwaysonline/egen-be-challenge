@@ -1,52 +1,62 @@
 package com.egen.weightanalyzer.repository.entities;
 
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
-public class AlertEntity  implements Serializable {
+@Entity(value = "Alert", noClassnameStored = true)
+public class AlertEntity implements Serializable {
 
-    private static final long serialVersionUID = 2679085268802435089L;
+    private static final long serialVersionUID = -24347792468831382L;
     private String alertType;
-        private String alertDesc;
-        private Date dateTime;
-        @Id
-        private String name;
+    private String alertDesc;
+    private String value;
+    private Timestamp timeStamp;
 
-        public Date getDateTime() {
-            return dateTime;
-        }
+    public String getAlertType() {
+        return alertType;
+    }
 
-        public void setDateTime(Date dateTime) {
-            this.dateTime = dateTime;
-        }
+    public void setAlertType(String alertType) {
+        this.alertType = alertType;
+    }
 
-        public String getAlertType() {
-            return alertType;
-        }
+    public String getAlertDesc() {
+        return alertDesc;
+    }
 
-        public void setAlertType(String alertType) {
-            this.alertType = alertType;
-        }
+    public void setAlertDesc(String alertDesc) {
+        this.alertDesc = alertDesc;
+    }
 
-        public String getAlertDesc() {
-            return alertDesc;
-        }
+    public String getValue() {
+        return value;
+    }
 
-        public void setAlertDesc(String alertDesc) {
-            this.alertDesc = alertDesc;
-        }
+    public void setValue(String value) {
+        this.value = value;
+    }
 
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     @Override
     public String toString() {
-        return "AlertEntity{" +
+        return "Alert{" +
                 "alertType='" + alertType + '\'' +
                 ", alertDesc='" + alertDesc + '\'' +
-                ", dateTime=" + dateTime +
+                ", value='" + value + '\'' +
+                ", timeStamp=" + timeStamp +
                 '}';
     }
 }

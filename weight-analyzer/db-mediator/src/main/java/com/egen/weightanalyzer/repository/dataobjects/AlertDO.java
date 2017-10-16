@@ -1,27 +1,15 @@
 package com.egen.weightanalyzer.repository.dataobjects;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
-@Component
-@Scope("prototype")
 public class AlertDO implements Serializable{
 
     private static final long serialVersionUID = 4878641394716438285L;
     private String alertType;
     private String alertDesc;
-    private Date dateTime;
-
-    public Date getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
-    }
+    private String value;
+    private Timestamp timeStamp;
 
     public String getAlertType() {
         return alertType;
@@ -37,5 +25,31 @@ public class AlertDO implements Serializable{
 
     public void setAlertDesc(String alertDesc) {
         this.alertDesc = alertDesc;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Alert{" +
+                "alertType='" + alertType + '\'' +
+                ", alertDesc='" + alertDesc + '\'' +
+                ", value='" + value + '\'' +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 }

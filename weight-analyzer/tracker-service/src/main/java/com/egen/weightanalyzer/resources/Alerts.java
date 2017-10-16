@@ -1,42 +1,52 @@
 package com.egen.weightanalyzer.resources;
 
+import com.egen.weightanalyzer.exceptions.AlertNotFoundException;
 import com.egen.weightanalyzer.model.Alert;
 import com.egen.weightanalyzer.util.AlertsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
-@RestController("/alerts")
+@RestController
+@RequestMapping(value = "/alerts")
 public class Alerts {
 
     @Autowired
     AlertsHelper alertsHelper;
 
     @PostMapping("/add")
-    public Alert createAlerts(Alert alert){
-
+    public Alert createAlerts(@RequestBody @Valid Alert alert) {
         return alertsHelper.createAlert(alert);
-    }
-    @GetMapping("/{id}")
-    public Alert readAlerts(){
-
-        return null;
     }
 
     @GetMapping("/")
-    public List<Alert> readAllAlerts(){
-      return alertsHelper.readAllAlerts();
+    @ResponseBody
+    public List<Alert> readAllAlerts() throws AlertNotFoundException {
+        List<Alert> alerts = alertsHelper.readAllAlerts();
+        if (CollectionUtils.isEmpty(alerts)) {
+            throw new AlertNotFoundException("Alerts Not found");
+        }
+        return alerts;
     }
 
-    @GetMapping("/{id}/{time1}-{time2}")
-    public Alert readAlertByTimeRange(@PathParam("time1")Timestamp timestamp1,
-                                      @PathParam("time2") Timestamp timestamp2){
-        return null;
+    @GetMapping("/time_line")
+    public List<Alert> readAlertByTimeRange(
+            @RequestParam String start,
+            @RequestParam String end) throws AlertNotFoundException {
+        Timestamp startT = Timestamp.from(Instant.ofEpochMilli(Long.parseLong(start)));
+        Timestamp endT = Timestamp.from(Instant.ofEpochMilli(Long.parseLong(end)));
+
+        List<Alert> alerts = alertsHelper.readAlertsByTimeRange(startT, endT);
+
+        if (CollectionUtils.isEmpty(alerts)) {
+            throw new AlertNotFoundException("Alerts Not found");
+        }
+        return alerts;
     }
 
 }

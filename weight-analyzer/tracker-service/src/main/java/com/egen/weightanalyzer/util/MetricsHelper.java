@@ -7,9 +7,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import com.egen.weightanalyzer.rules.ruleprocessors.WeightRuleProcessor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -21,11 +22,15 @@ public class MetricsHelper {
     @Qualifier("metricRepository")
     IMetricRepository metricRepository;
 
-    public Metric createMetric(Metric metric) {
+    @Autowired
+    WeightRuleProcessor weightRuleProcessor;
+
+    public Metric createMetric(Metric metric){
         MetricDO metricDO = new MetricDO();
         metricDO.setTimeStamp(metric.getTimeStamp());
         metricDO.setValue(metric.getValue());
-        metricDO = metricRepository.createMetric(metricDO);
+        weightRuleProcessor.process(metricDO);
+        metricRepository.createMetric(metricDO);
         return metric;
     }
 
@@ -42,10 +47,10 @@ public class MetricsHelper {
     }
 
 
-    public List<Metric> readMetricByTimeRange() {
-        List<MetricDO> metricsDO = metricRepository.findAll();
+    public List<Metric> readMetricByTimeRange(Timestamp timestamp1,Timestamp timestamp2) {
+        List<MetricDO> metricsDO = metricRepository.findAllByTimeRange(timestamp1,timestamp2);
         List<Metric> metrics = new ArrayList<>();
-        metrics = metricsDO.stream().filter(Objects::nonNull).map(metricDO -> {
+            metrics = metricsDO.stream().filter(Objects::nonNull).map(metricDO -> {
             Metric metric = new Metric();
             BeanUtils.copyProperties(metricDO, metric);
             return metric;

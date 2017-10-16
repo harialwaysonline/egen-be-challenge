@@ -1,19 +1,22 @@
 package com.egen.weightanalyzer.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Metric implements Serializable{
+public class Metric implements Serializable {
 
+    private static final long serialVersionUID = 8645874704494795216L;
     @NotNull
     private String value;
 
     @NotNull
+    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Timestamp timeStamp;
 
-    @Nullable
     private String name;
 
     public String getValue() {

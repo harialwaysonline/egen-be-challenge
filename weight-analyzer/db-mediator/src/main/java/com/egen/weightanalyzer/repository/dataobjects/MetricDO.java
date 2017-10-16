@@ -1,14 +1,9 @@
 package com.egen.weightanalyzer.repository.dataobjects;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Component
-@Scope("prototype")
+
 public class MetricDO implements Serializable {
 
     private static final long serialVersionUID = 3343498572930047482L;
